@@ -104,7 +104,7 @@ func Strftime(format string, tm Tm) (s string) {
 	defer C.free(unsafe.Pointer(fmt))
 
 	for size := initialBufSize; ; size *= 2 {
-		buf := (*C.char)(C.malloc(C.size_t(size))) // can panic
+		buf := (*C.char)(C.malloc(C.size_t(size)))
 		defer C.free(unsafe.Pointer(buf))
 		n := C.strftime(buf, C.size_t(size), fmt, tm.native())
 		if n == 0 {

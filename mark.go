@@ -1,11 +1,21 @@
 package rtk
 
+import (
+	_ "github.com/gocarina/gocsv"
+)
+
+type PhaseComp struct {
+	v float64
+	d byte
+}
+
 type MRK struct {
 	Photo               int32
-	Gpst                GTime
-	PhaseCompNs         float64
-	PhaseCompEw         float64
-	PhaseCompV          float64
+	Time                float64
+	Week                int32
+	PhaseCompNs         PhaseComp
+	PhaseCompEw         PhaseComp
+	PhaseCompV          PhaseComp
 	Latitude            float64
 	Longitude           float64
 	Altitude            float64

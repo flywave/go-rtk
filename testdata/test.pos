@@ -1,0 +1,24 @@
+% program   : RTKLIB ver.2.4.2
+% inp file  : ../../../test/data/rinex/07590920.05o
+% inp file  : ../../../test/data/rinex/30400920.05n
+% inp file  : ../../../test/data/rinex/30400920.05o
+% obs start : 2005/04/02 00:00:00.0 GPST (week1316 518400.0s)
+% obs end   : 2005/04/02 00:59:30.0 GPST (week1316 521970.0s)
+% pos mode  : static
+% freqs     : L1+L2
+% solution  : combined
+% elev mask : 15.0 deg
+% dynamics  : off
+% tidecorr  : off
+% ionos opt : broadcast
+% tropo opt : saastamoinen
+% ephemeris : broadcast
+% amb res   : fix and hold
+% val thres : 3.0
+% antenna1  : *                     ( 0.0000  0.0000  0.0000)
+% antenna2  : *                     ( 0.0000  0.0000  0.0000)
+% ref pos   : 350755.40544 1393727.50368   73.9077
+%
+% (lat/lon/height=WGS84/geodetic,Q=1:fix,2:float,3:sbas,4:dgps,5:single,6:ppp,ns=# of satellites)
+%  GPST                          latitude(d'")   longitude(d'")  height(m)   Q  ns   sdn(m)   sde(m)   sdu(m)  sdne(m)  sdeu(m)  sdue(m) age(s)  ratio
+2005/04/02 00:00:00.000257662   35 09 39.11748  139 36 49.83487    31.9065   1   5   0.0009   0.0006   0.0018   0.0003  -0.0004  -0.0003 -29.99  999.9

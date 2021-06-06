@@ -1,5 +1,9 @@
 package rtk
 
+import (
+	_ "github.com/gocarina/gocsv"
+)
+
 type Pos struct {
 	Gpst      GTime
 	Latitude  float64
