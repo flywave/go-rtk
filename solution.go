@@ -88,6 +88,5 @@ int ppk_solution(const char *rofile, const char *bofile,
   free_in_file(infile);
   return 0;
 }
-
 */
 import "C"

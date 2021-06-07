@@ -1,5 +1,9 @@
 package rtk
 
+import (
+	_ "github.com/jszwec/csvutil"
+)
+
 type Pos struct {
 	Gpst      GTime
 	Latitude  float64

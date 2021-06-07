@@ -1,5 +1,9 @@
 package rtk
 
+import (
+	_ "github.com/jszwec/csvutil"
+)
+
 type PhaseComp struct {
 	v float64
 	d byte

@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"strings"
 
 	"github.com/rwcarlsen/goexif/exif"
@@ -66,12 +65,10 @@ type exifWalker struct {
 
 func (w exifWalker) Walk(name exif.FieldName, tag *tiff.Tag) error {
 	if tag == nil {
-		log.Printf("nil tag encountered in EXIF: %v", name)
 		return nil
 	}
 	var value string
 	switch tag.Id {
-
 	case 0x9c9e, 0x9c9f, 0x9c9d, 0x9c9c, 0x9c9b:
 		value = tag.String()
 	default:
