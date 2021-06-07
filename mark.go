@@ -1,9 +1,5 @@
 package rtk
 
-import (
-	_ "github.com/gocarina/gocsv"
-)
-
 type PhaseComp struct {
 	v float64
 	d byte
