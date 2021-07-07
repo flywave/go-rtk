@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/gocarina/gocsv"
-	_ "github.com/gocarina/gocsv"
 )
 
 type YearMonthDay struct {

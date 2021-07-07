@@ -44,7 +44,6 @@ double parse_time_to_utc(const char *inbuff, struct tm *tt) {
 
   return 1000 / tmsec;
 }
-
 */
 import "C"
 
