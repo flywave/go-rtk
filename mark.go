@@ -177,6 +177,10 @@ type MRK struct {
 	diffAltitude        float64
 }
 
+func (m *MRK) GetGpst() GTime {
+	return GTime{}
+}
+
 func ReadMRK(reader io.Reader) ([]MRK, error) {
 	csvReader := csv.NewReader(reader)
 	csvReader.Comma = '\t'

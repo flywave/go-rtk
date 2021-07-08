@@ -55,7 +55,9 @@ type unsafeSol struct {
 	ratio float32
 }
 
-func ReadPos(pospath string) []Pos {
+type TimeRange [2]GTime
+
+func ReadPos(pospath string) ([]Pos, TimeRange) {
 	var buf C.solbuf_t
 	cpospath := C.CString(pospath)
 	defer C.free(unsafe.Pointer(cpospath))
@@ -63,7 +65,7 @@ func ReadPos(pospath string) []Pos {
 	ret := int(C.readsol(&paths[0], 1, &buf))
 	defer C.freesolbuf(&buf)
 	if ret == 0 {
-		return nil
+		return nil, TimeRange{}
 	}
 	count := int(buf.n)
 
@@ -95,5 +97,6 @@ func ReadPos(pospath string) []Pos {
 		poss[i].Age = sol.age
 		poss[i].Ratio = sol.ratio
 	}
-	return poss
+	start, end := int(buf.start), int(buf.end)
+	return poss, TimeRange{poss[start].Gpst, poss[end].Gpst}
 }

@@ -1,7 +1,11 @@
 github.com/flywave/go-geoid v0.0.0-20210606093922-a80b15fa80a0 h1:r611qNLxSaet/c40ykqKGxa69AZp14QP1XT5CDwmDBE=
 github.com/flywave/go-geoid v0.0.0-20210606093922-a80b15fa80a0/go.mod h1:ndXH2J5+CsynPtyL7oihZtN8rRxJ8kpqqwy2DOa86OQ=
+github.com/flywave/go-geoid v0.0.0-20210705014121-cd8f70cb88bb h1:cfvIpGcu887EYg+ydfMj+hWSHHjxBBu066XK2+rKAQc=
+github.com/flywave/go-geoid v0.0.0-20210705014121-cd8f70cb88bb/go.mod h1:ndXH2J5+CsynPtyL7oihZtN8rRxJ8kpqqwy2DOa86OQ=
 github.com/flywave/go-proj v0.0.0-20210605132706-d05d11f58021 h1:b9ggSlvQhC4PyvdU/GNFc8E9cgtHJMk2EVMkcFgRtzY=
 github.com/flywave/go-proj v0.0.0-20210605132706-d05d11f58021/go.mod h1:arlOMgTGugKsD+yFiKdAipbAKOZU/KIpTJwk5jnjNow=
+github.com/flywave/go-proj v0.0.0-20210708024853-92de7f26712a h1:srwTNcHMN/ZNZQ4B2uIK1644nK14TJ3LirbnVEhHbxs=
+github.com/flywave/go-proj v0.0.0-20210708024853-92de7f26712a/go.mod h1:arlOMgTGugKsD+yFiKdAipbAKOZU/KIpTJwk5jnjNow=
 github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8 h1:hp1oqdzmv37vPLYFGjuM/RmUgUMfD9vQfMszc54l55Y=
 github.com/gocarina/gocsv v0.0.0-20210516172204-ca9e8a8ddea8/go.mod h1:5YoVOkjYAQumqlV356Hj3xeYh4BdZuLE0/nRkf2NKkI=
 github.com/rwcarlsen/goexif v0.0.0-20190401172101-9e8deecbddbd h1:CmH9+J6ZSsIjUK3dcGsnCnO41eRBOnY12zwkn5qVwgc=

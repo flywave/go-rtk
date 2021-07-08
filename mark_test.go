@@ -20,7 +20,7 @@ func TestMarkRead(t *testing.T) {
 }
 
 func TestPosRead(t *testing.T) {
-	pos := ReadPos("./testdata/test.pos")
+	pos, _ := ReadPos("./testdata/test.pos")
 	if len(pos) == 0 {
 		t.FailNow()
 	}
