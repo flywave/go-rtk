@@ -90,3 +90,25 @@ int ppk_solution(const char *rofile, const char *bofile,
 }
 */
 import "C"
+import (
+	"errors"
+	"unsafe"
+)
+
+func Solution(rofile string, bofile string, navfile string, posfile string) error {
+	crofile := C.CString(rofile)
+	cbofile := C.CString(bofile)
+	cnavfile := C.CString(navfile)
+	cposfile := C.CString(posfile)
+
+	defer C.free(unsafe.Pointer(crofile))
+	defer C.free(unsafe.Pointer(cbofile))
+	defer C.free(unsafe.Pointer(cnavfile))
+	defer C.free(unsafe.Pointer(cposfile))
+
+	ret := int(C.ppk_solution(crofile, cbofile, cnavfile, cposfile))
+	if ret < 0 {
+		return errors.New("solutin error")
+	}
+	return nil
+}

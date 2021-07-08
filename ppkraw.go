@@ -33,3 +33,18 @@ void ppk_raw_to_rindex(gtime_t gpst, const char *bin,
 }
 */
 import "C"
+import "unsafe"
+
+func RawToRIndex(gpst GTime, binfile, ofile, nfile, gfile string) {
+	cbinfile := C.CString(binfile)
+	cofile := C.CString(ofile)
+	cnfile := C.CString(nfile)
+	cgfile := C.CString(gfile)
+
+	defer C.free(unsafe.Pointer(cbinfile))
+	defer C.free(unsafe.Pointer(cofile))
+	defer C.free(unsafe.Pointer(cnfile))
+	defer C.free(unsafe.Pointer(cgfile))
+
+	C.ppk_raw_to_rindex(gpst.t, cbinfile, cofile, cnfile, cgfile)
+}

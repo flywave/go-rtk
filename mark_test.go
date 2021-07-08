@@ -20,14 +20,7 @@ func TestMarkRead(t *testing.T) {
 }
 
 func TestPosRead(t *testing.T) {
-	f, err := os.Open("./testdata/test.pos")
-	if err != nil {
-		t.FailNow()
-	}
-	pos, err := ReadPos(f)
-	if err != nil {
-		t.FailNow()
-	}
+	pos := ReadPos("./testdata/test.pos")
 	if len(pos) == 0 {
 		t.FailNow()
 	}
