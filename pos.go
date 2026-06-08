@@ -98,5 +98,17 @@ func ReadPos(pospath string) ([]Pos, TimeRange) {
 		poss[i].Ratio = sol.ratio
 	}
 	start, end := int(buf.start), int(buf.end)
+	if end > 0 {
+		end--
+	}
+	if start < 0 {
+		start = 0
+	}
+	if end >= count {
+		end = count - 1
+	}
+	if end < start {
+		end = start
+	}
 	return poss, TimeRange{poss[start].Gpst, poss[end].Gpst}
 }

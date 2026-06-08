@@ -178,7 +178,8 @@ type MRK struct {
 }
 
 func (m *MRK) GetGpst() GTime {
-	return GTime{}
+	gt := NewGTimeFromGPSTime(int32(m.Week.w), m.Time)
+	return *gt
 }
 
 func ReadMRK(reader io.Reader) ([]MRK, error) {

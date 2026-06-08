@@ -48,8 +48,8 @@ void init_in_file(char *infile[], int *n, const char *rofile,
   strcpy(infile[2], navfile);
 
   *n = 0;
-  while (strlen(infile[*n]) && *n <= INFILEMAX) {
-    *n++;
+  while (*n < INFILEMAX && strlen(infile[*n])) {
+    (*n)++;
   }
 }
 
@@ -81,7 +81,7 @@ int ppk_solution(const char *rofile, const char *bofile,
   double ti = 0.0, tu = 0.0;
 
   if (postpos(ts, te, ti, tu, &prcopt, &solopt, &filopt, infile, n, outfile, "",
-              "") == 1) {
+              "") != 0) {
     return -1;
   }
 
@@ -108,7 +108,7 @@ func Solution(rofile string, bofile string, navfile string, posfile string) erro
 
 	ret := int(C.ppk_solution(crofile, cbofile, cnavfile, cposfile))
 	if ret < 0 {
-		return errors.New("solutin error")
+		return errors.New("solution error")
 	}
 	return nil
 }

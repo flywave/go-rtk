@@ -37,20 +37,26 @@ func ppkInitPos(poses []Pos, mrks []MRK) {
 	for i := range mrks {
 		first := nearestTimeInd(poses, mrks[i].GetGpst())
 		mrks[i].closestId = int32(first)
-		mrks[i].closestTime = poses[i].Gpst
-		mrks[i].closestLatitude = poses[i].Latitude
-		mrks[i].closestLongitude = poses[i].Longitude
-		mrks[i].closestAltitude = poses[i].Height
+		mrks[i].closestTime = poses[first].Gpst
+		mrks[i].closestLatitude = poses[first].Latitude
+		mrks[i].closestLongitude = poses[first].Longitude
+		mrks[i].closestAltitude = poses[first].Height
 
 		pivot := mrks[i].GetGpst()
 
-		dta := poses[first-1].Gpst.Diff(&pivot)
-		dtb := poses[first+1].Gpst.Diff(&pivot)
 		var second int
-		if math.Abs(dta) < math.Abs(dtb) {
-			second = first - 1
+		if first == 0 {
+			second = 1
+		} else if first == len(poses)-1 {
+			second = len(poses) - 2
 		} else {
-			second = first + 1
+			dta := poses[first-1].Gpst.Diff(&pivot)
+			dtb := poses[first+1].Gpst.Diff(&pivot)
+			if math.Abs(dta) < math.Abs(dtb) {
+				second = first - 1
+			} else {
+				second = first + 1
+			}
 		}
 		mrks[i].sndClosestId = int32(second)
 		mrks[i].sndClosestTime = poses[second].Gpst
@@ -61,7 +67,7 @@ func ppkInitPos(poses []Pos, mrks []MRK) {
 }
 
 func ppkUpdatedMrks(mrks []MRK) {
-	degLon := math.Cos(RadianToDegree(mrks[0].Latitude.v)) * 111.321
+	degLon := math.Cos(DegreeToRadian(mrks[0].Latitude.v)) * 111.321
 
 	for i := range mrks {
 		mtime := mrks[i].GetGpst()
@@ -108,10 +114,12 @@ func convertGPS(mrk *MRK, pose_datum Datum, pose_vertica_datum geoid.VerticalDat
 	if isDatums(srspj, pose_datum) {
 		val = transformFromLLA(
 			srspj, [3]float64{longitude, latitude, altitude}, pose_datum)
+	} else {
+		val = [3]float64{longitude, latitude, altitude}
 	}
 	if vertica_datum != geoid.HAE &&
 		vertica_datum != geoid.UNKNOWN {
-		val[2] = WGS84ToMSL(longitude, latitude, altitude, vertica_datum)
+		val[2] = WGS84ToMSL(val[0], val[1], val[2], vertica_datum)
 	}
 	return val
 }
@@ -142,7 +150,7 @@ func PPKSolution(posfile string, markfile string, pose_datum Datum, pose_vertica
 	sols := make([]PPKSol, len(mrks))
 	for i := range sols {
 		sols[i].Pos = convertGPS(
-			&mrks[i], pose_datum, vertica_datum,
+			&mrks[i], pose_datum, pose_vertica_datum,
 			srs,
 			vertica_datum, ellipsoid_offset)
 

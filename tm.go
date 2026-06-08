@@ -42,7 +42,7 @@ double parse_time_to_utc(const char *inbuff, struct tm *tt) {
   tt->tm_sec = second;
   tt->tm_gmtoff = 0;
 
-  return 1000 / tmsec;
+	return tmsec == 0 ? 0.0 : (double)tmsec / 1000.0;
 }
 */
 import "C"

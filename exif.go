@@ -2,7 +2,6 @@ package rtk
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -38,7 +37,7 @@ func ReadExifXMP(reader io.Reader) (error, map[string]interface{}) {
 	}
 
 	if bytes.Count(body, []byte(xmpPacketMarker)) != 2 {
-		return errors.New(fmt.Sprintf("error while finding XMP document: %v", err)), nil
+		return fmt.Errorf("error while finding XMP document: %v", err), nil
 	}
 	var xmpIndex = bytes.Index(body, []byte(xmpPacketMarker))
 
