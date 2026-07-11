@@ -16,7 +16,7 @@ type PhaseComp struct {
 }
 
 func (date *PhaseComp) MarshalCSV() (string, error) {
-	return fmt.Sprintf("%f,%s", date.v, date.d), nil
+	return fmt.Sprintf("%.10f,%s", date.v, date.d), nil
 }
 
 func (date *PhaseComp) String() string {
@@ -61,7 +61,7 @@ type Angle struct {
 }
 
 func (date *Angle) MarshalCSV() (string, error) {
-	return fmt.Sprintf("%f,%s", date.v, date.d), nil
+	return fmt.Sprintf("%.10f,%s", date.v, date.d), nil
 }
 
 func (date *Angle) String() string {
@@ -109,7 +109,7 @@ type Std struct {
 }
 
 func (date *Std) MarshalCSV() (string, error) {
-	return fmt.Sprintf("%f, %f, %f", date.latitude, date.longitude, date.altitude), nil
+	return fmt.Sprintf("%.10f, %.10f, %.10f", date.latitude, date.longitude, date.altitude), nil
 }
 
 func (date *Std) String() string {

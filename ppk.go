@@ -34,6 +34,9 @@ func nearestTimeInd(poses []Pos, pivot GTime) int {
 }
 
 func ppkInitPos(poses []Pos, mrks []MRK) {
+	if len(poses) == 0 || len(mrks) == 0 {
+		return
+	}
 	for i := range mrks {
 		first := nearestTimeInd(poses, mrks[i].GetGpst())
 		mrks[i].closestId = int32(first)
@@ -45,7 +48,9 @@ func ppkInitPos(poses []Pos, mrks []MRK) {
 		pivot := mrks[i].GetGpst()
 
 		var second int
-		if first == 0 {
+		if len(poses) == 1 {
+			second = 0
+		} else if first == 0 {
 			second = 1
 		} else if first == len(poses)-1 {
 			second = len(poses) - 2
@@ -67,6 +72,9 @@ func ppkInitPos(poses []Pos, mrks []MRK) {
 }
 
 func ppkUpdatedMrks(mrks []MRK) {
+	if len(mrks) == 0 {
+		return
+	}
 	degLon := math.Cos(DegreeToRadian(mrks[0].Latitude.v)) * 111.321
 
 	for i := range mrks {
@@ -132,6 +140,9 @@ type PPKSol struct {
 func PPKSolution(posfile string, markfile string, pose_datum Datum, pose_vertica_datum geoid.VerticalDatum,
 	srs string, vertica_datum geoid.VerticalDatum, ellipsoid_offset float64) (error, []PPKSol) {
 	poses, _ := ReadPos(posfile)
+	if len(poses) == 0 {
+		return nil, nil
+	}
 	f, err := os.Open(markfile)
 
 	if err != nil {
@@ -154,8 +165,17 @@ func PPKSolution(posfile string, markfile string, pose_datum Datum, pose_vertica
 			srs,
 			vertica_datum, ellipsoid_offset)
 
-		sols[i].Weight = [3]float64{1 / mrks[i].Std.longitude, 1 / mrks[i].Std.latitude,
-			1 / mrks[i].Std.altitude}
+		wlon, wlat, walt := 1.0, 1.0, 1.0
+		if mrks[i].Std.longitude != 0 {
+			wlon = 1 / mrks[i].Std.longitude
+		}
+		if mrks[i].Std.latitude != 0 {
+			wlat = 1 / mrks[i].Std.latitude
+		}
+		if mrks[i].Std.altitude != 0 {
+			walt = 1 / mrks[i].Std.altitude
+		}
+		sols[i].Weight = [3]float64{wlon, wlat, walt}
 	}
 	return nil, sols
 }

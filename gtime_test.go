@@ -2,6 +2,7 @@ package rtk
 
 import (
 	"testing"
+	"time"
 )
 
 func TestGTimeFromGPSTimeRoundTrip(t *testing.T) {
@@ -11,8 +12,11 @@ func TestGTimeFromGPSTimeRoundTrip(t *testing.T) {
 	if gt == nil {
 		t.FailNow()
 	}
-	w, _ := gt.GpsTime()
+	w, s := gt.GpsTime()
 	if w != week {
+		t.FailNow()
+	}
+	if s != sec {
 		t.FailNow()
 	}
 }
@@ -37,6 +41,15 @@ func TestGTimeDiff(t *testing.T) {
 	}
 }
 
+func TestGTimeDiffNegative(t *testing.T) {
+	gt1 := NewGTimeFromGPSTime(2024, 200.0)
+	gt2 := NewGTimeFromGPSTime(2024, 100.0)
+	diff := gt2.Diff(gt1)
+	if diff != -100.0 {
+		t.FailNow()
+	}
+}
+
 func TestGTimeAdd(t *testing.T) {
 	gt := NewGTimeFromGPSTime(2024, 100.0)
 	if gt == nil {
@@ -45,6 +58,15 @@ func TestGTimeAdd(t *testing.T) {
 	gt.Add(50.0)
 	_, s := gt.GpsTime()
 	if s != 150.0 {
+		t.FailNow()
+	}
+}
+
+func TestGTimeAddNegative(t *testing.T) {
+	gt := NewGTimeFromGPSTime(2024, 100.0)
+	gt.Add(-30.0)
+	_, s := gt.GpsTime()
+	if s != 70.0 {
 		t.FailNow()
 	}
 }
@@ -76,7 +98,7 @@ func TestGTimeDayOfYear(t *testing.T) {
 	if gt == nil {
 		t.FailNow()
 	}
-	doy := gt.DayOfYear(0)
+	doy := gt.DayOfYear()
 	if doy < 1 || doy > 366 {
 		t.FailNow()
 	}
@@ -89,6 +111,13 @@ func TestNewGPSTFromUTC(t *testing.T) {
 	}
 	gpst := NewGPSTFromUTC(utc)
 	if gpst == nil {
+		t.FailNow()
+	}
+}
+
+func TestNewGPSTFromUTCNil(t *testing.T) {
+	gpst := NewGPSTFromUTC(nil)
+	if gpst != nil {
 		t.FailNow()
 	}
 }
@@ -135,6 +164,108 @@ func TestBDTime(t *testing.T) {
 func TestCurrent(t *testing.T) {
 	ct := Current()
 	if ct == nil {
+		t.FailNow()
+	}
+}
+
+func TestGTimeTimeAndSec(t *testing.T) {
+	gt := NewGTimeFromGPSTime(2024, 275295.301059)
+	if gt == nil {
+		t.FailNow()
+	}
+	if gt.Sec() == 0 && gt.Time() == 0 {
+		t.FailNow()
+	}
+}
+
+func TestNewGTimeFromStr(t *testing.T) {
+	gt := NewGTimeFromStr("2024/06/15 10:30:45")
+	if gt == nil {
+		t.FailNow()
+	}
+	ep := gt.Epoch()
+	if ep[0] < 2024 || ep[0] > 2025 {
+		t.FailNow()
+	}
+}
+
+func TestNewGTimeFromStrWithFraction(t *testing.T) {
+	gt := NewGTimeFromStr("2024/06/15 10:30:45.500")
+	if gt == nil {
+		t.FailNow()
+	}
+}
+
+func TestNewUtcTime(t *testing.T) {
+	gt := NewUtcTime("2024/06/15 10:30:45")
+	if gt == nil {
+		t.FailNow()
+	}
+}
+
+func TestNewUtcTimeWithFraction(t *testing.T) {
+	gt := NewUtcTime("2024/06/15 10:30:45.500")
+	if gt == nil {
+		t.FailNow()
+	}
+}
+
+func TestNewGPSTime(t *testing.T) {
+	gt := NewGPSTTime("2024/06/15 10:30:45")
+	if gt == nil {
+		t.FailNow()
+	}
+}
+
+func TestNewUtcTimeFromTime(t *testing.T) {
+	now := time.Date(2024, 6, 15, 10, 30, 45, 0, time.UTC)
+	gt := NewUtcTimeFromTime(now)
+	if gt == nil {
+		t.FailNow()
+	}
+	ep := gt.Epoch()
+	if ep[0] != 2024 || ep[1] != 6 || ep[2] != 15 {
+		t.FailNow()
+	}
+}
+
+func TestGPSTimeFromTime(t *testing.T) {
+	now := time.Date(2024, 6, 15, 10, 30, 45, 0, time.UTC)
+	gt := NewGPSTTimeFromTime(now)
+	if gt == nil {
+		t.FailNow()
+	}
+}
+
+func TestNewUtcTimeFromLocalInvalid(t *testing.T) {
+	gt := NewUtcTimeFromLocal("invalid", "UTC")
+	if gt != nil {
+		t.FailNow()
+	}
+}
+
+func TestNewGPSTTimeFromLocalInvalid(t *testing.T) {
+	gt := NewGPSTTimeFromLocal("invalid", "UTC")
+	if gt != nil {
+		t.FailNow()
+	}
+}
+
+func TestNewUtcTimeFromCurrentLocalInvalid(t *testing.T) {
+	gt := NewUtcTimeFromCurrentLocal("invalid")
+	if gt != nil {
+		t.FailNow()
+	}
+}
+
+func TestEpochRoundTrip(t *testing.T) {
+	ep := [6]float64{2024, 6, 15, 10, 30, 45.5}
+	gt := NewGTimeFromEpoch(ep)
+	if gt == nil {
+		t.FailNow()
+	}
+	ep2 := gt.Epoch()
+	if ep[0] != ep2[0] || ep[1] != ep2[1] || ep[2] != ep2[2] {
 		t.FailNow()
 	}
 }

@@ -104,15 +104,18 @@ func Strftime(format string, tm Tm) (s string) {
 
 	for size := initialBufSize; ; size *= 2 {
 		buf := (*C.char)(C.malloc(C.size_t(size)))
-		defer C.free(unsafe.Pointer(buf))
 		n := C.strftime(buf, C.size_t(size), fmt, tm.native())
 		if n == 0 {
+			C.free(unsafe.Pointer(buf))
 			if size > 20*len(format) {
 				return
 			}
 		} else if int(n) < size {
 			s = C.GoStringN(buf, C.int(n))
+			C.free(unsafe.Pointer(buf))
 			return
+		} else {
+			C.free(unsafe.Pointer(buf))
 		}
 	}
 }

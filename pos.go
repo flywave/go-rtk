@@ -3,8 +3,8 @@ package rtk
 // #include <stdlib.h>
 // #include <string.h>
 // #include <rtklib.h>
-// #cgo CFLAGS: -I ./  -I ./lib
-// #cgo CXXFLAGS: -I ./ -I ./lib
+// #cgo CFLAGS: -I ./  -I ./libs
+// #cgo CXXFLAGS: -I ./ -I ./libs
 import "C"
 import (
 	"reflect"

@@ -3,14 +3,15 @@ package rtk
 // #include <stdlib.h>
 // #include <string.h>
 // #include <rtklib.h>
-// #cgo CFLAGS: -I ./  -I ./lib
-// #cgo CXXFLAGS: -I ./ -I ./lib
-// #cgo linux LDFLAGS:  -L ./lib -Wl,--start-group  -lstdc++ -lm -pthread -ldl -lrtklib -Wl,--end-group
-// #cgo windows LDFLAGS: -L ./lib -lrtklib
-// #cgo darwin LDFLAGS: -L　./lib -lrtklib
+// #cgo CFLAGS: -I ./  -I ./libs
+// #cgo CXXFLAGS: -I ./ -I ./libs
+// #cgo linux,amd64 LDFLAGS: -L ./libs/linux -Wl,--start-group -lstdc++ -lm -pthread -ldl -lrtklib -Wl,--end-group
+// #cgo linux,arm64 LDFLAGS: -L ./libs/linux_arm -Wl,--start-group -lstdc++ -lm -pthread -ldl -lrtklib -Wl,--end-group
+// #cgo darwin,amd64 LDFLAGS: -L ./libs/darwin -lrtklib
+// #cgo darwin,arm64 LDFLAGS: -L ./libs/darwin_arm -lrtklib
+// #cgo windows LDFLAGS: -L ./libs/windows -lrtklib
 import "C"
 import (
-	"fmt"
 	"time"
 	"unsafe"
 )
@@ -20,10 +21,12 @@ type GTime struct {
 }
 
 func NewGTimeFromStr(str string) *GTime {
-	var ct C.gtime_t
-	cstr := C.CString(str)
-	C.str2time(cstr, C.int(0), C.int(len(str)), &ct)
-	return &GTime{t: ct}
+	ep, sec := ParseUtcTime(str)
+	g := NewGTimeFromEpoch(ep)
+	if g != nil {
+		g.Add(sec)
+	}
+	return g
 }
 
 func NewGTimeFromEpoch(ep [6]float64) *GTime {
@@ -47,6 +50,9 @@ func NewGTimeFromBDTime(week int32, sec float64) *GTime {
 }
 
 func NewGPSTFromUTC(utc *GTime) *GTime {
+	if utc == nil {
+		return nil
+	}
 	ct := C.utc2gpst(utc.t)
 	return &GTime{t: ct}
 }
@@ -73,7 +79,9 @@ func NewGPSTTimeFromTime(t time.Time) *GTime {
 func NewUtcTime(str string) *GTime {
 	ep, sec := ParseUtcTime(str)
 	g := NewGTimeFromEpoch(ep)
-	g.Add(sec)
+	if g != nil {
+		g.Add(sec)
+	}
 	return g
 }
 
@@ -87,15 +95,15 @@ const (
 )
 
 func parseWithLocation(name string, timeStr string) (time.Time, error) {
-	locationName := name
-	if l, err := time.LoadLocation(locationName); err != nil {
-		println(err.Error())
+	l, err := time.LoadLocation(name)
+	if err != nil {
 		return time.Time{}, err
-	} else {
-		lt, _ := time.ParseInLocation(TIME_LAYOUT, timeStr, l)
-		fmt.Println(locationName, lt)
-		return lt, nil
 	}
+	lt, err := time.ParseInLocation(TIME_LAYOUT, timeStr, l)
+	if err != nil {
+		return time.Time{}, err
+	}
+	return lt, nil
 }
 
 func NewUtcTimeFromLocal(timeStr string, name string) *GTime {
@@ -207,6 +215,6 @@ func (g *GTime) ToString(n int) string {
 	return C.GoString(C.time_str(g.t, C.int(n)))
 }
 
-func (g *GTime) DayOfYear(n int) float64 {
+func (g *GTime) DayOfYear() float64 {
 	return float64(C.time2doy(g.t))
 }

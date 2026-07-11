@@ -1,5 +1,7 @@
 package rtk
 
+// #cgo CFLAGS: -I ./  -I ./libs
+// #cgo CXXFLAGS: -I ./ -I ./libs
 /*
 #include <stdlib.h>
 #include <time.h>
@@ -11,7 +13,7 @@ package rtk
 #define INFILEMAX 5
 #define BUFSIZE 1024
 
-int showmsg(char *format, ...) { return 0; }
+int showmsg(const char *format, ...) { return 0; }
 
 void settspan(gtime_t ts, gtime_t te) {}
 

@@ -22,6 +22,9 @@ func init() {
 }
 
 func ReadExifXMP(reader io.Reader) (error, map[string]interface{}) {
+	if reader == nil {
+		return fmt.Errorf("reader is nil"), nil
+	}
 	body, err := ioutil.ReadAll(reader)
 	if err != nil {
 		return err, nil
@@ -36,8 +39,8 @@ func ReadExifXMP(reader io.Reader) (error, map[string]interface{}) {
 		return err, nil
 	}
 
-	if bytes.Count(body, []byte(xmpPacketMarker)) != 2 {
-		return fmt.Errorf("error while finding XMP document: %v", err), nil
+	if n := bytes.Count(body, []byte(xmpPacketMarker)); n < 2 {
+		return fmt.Errorf("error while finding XMP document: found %d xpacket markers, expected at least 2", n), nil
 	}
 	var xmpIndex = bytes.Index(body, []byte(xmpPacketMarker))
 
@@ -66,13 +69,7 @@ func (w exifWalker) Walk(name exif.FieldName, tag *tiff.Tag) error {
 	if tag == nil {
 		return nil
 	}
-	var value string
-	switch tag.Id {
-	case 0x9c9e, 0x9c9f, 0x9c9d, 0x9c9c, 0x9c9b:
-		value = tag.String()
-	default:
-		value = tag.String()
-	}
+	value := tag.String()
 
 	if strings.HasPrefix(value, `"`) && strings.HasSuffix(value, `"`) {
 		value = strings.TrimRight(strings.TrimLeft(value, `"`), `"`)
