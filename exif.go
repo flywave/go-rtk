@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"strings"
 
 	"github.com/rwcarlsen/goexif/exif"
@@ -25,7 +24,7 @@ func ReadExifXMP(reader io.Reader) (error, map[string]interface{}) {
 	if reader == nil {
 		return fmt.Errorf("reader is nil"), nil
 	}
-	body, err := ioutil.ReadAll(reader)
+	body, err := io.ReadAll(reader)
 	if err != nil {
 		return err, nil
 	}

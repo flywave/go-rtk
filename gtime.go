@@ -129,16 +129,23 @@ func getLocalTimeZoneOffset() (name string, offset int) {
 }
 
 func NewUTCFromLocalTM(tt Tm, sec float64) *GTime {
+	year := int(tt.core.tm_year) + 1900
+	month := time.Month(int(tt.core.tm_mon) + 1)
+	day := int(tt.core.tm_mday)
+	hour := int(tt.core.tm_hour)
+	minute := int(tt.core.tm_min)
+	second := int(tt.core.tm_sec)
+
+	localTime := time.Date(year, month, day, hour, minute, second, 0, time.Local)
+	utcTime := localTime.UTC()
+
 	var ep [6]float64
-
-	_, offset := getLocalTimeZoneOffset()
-
-	ep[0] = float64(tt.core.tm_year) + 1900
-	ep[1] = float64(tt.core.tm_mon) + 1
-	ep[2] = float64(tt.core.tm_mday)
-	ep[3] = float64(tt.core.tm_hour)
-	ep[4] = float64(tt.core.tm_min)
-	ep[5] = float64(tt.core.tm_sec) + float64(offset)
+	ep[0] = float64(utcTime.Year())
+	ep[1] = float64(utcTime.Month())
+	ep[2] = float64(utcTime.Day())
+	ep[3] = float64(utcTime.Hour())
+	ep[4] = float64(utcTime.Minute())
+	ep[5] = float64(utcTime.Second())
 
 	g := NewGTimeFromEpoch(ep)
 	g.Add(sec)

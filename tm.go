@@ -14,7 +14,7 @@ double parse_time_to_utc(const char *inbuff, struct tm *tt) {
 
   char trsbuf[120];
 
-  for (i = 0; i < strlen(inbuff); i++) {
+  for (i = 0; i < (int)sizeof(trsbuf) - 1 && inbuff[i]; i++) {
     if (isupper(inbuff[i]))
       trsbuf[i] = tolower(inbuff[i]);
     else

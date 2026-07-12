@@ -75,12 +75,15 @@ func ppkUpdatedMrks(mrks []MRK) {
 	if len(mrks) == 0 {
 		return
 	}
-	degLon := math.Cos(DegreeToRadian(mrks[0].Latitude.v)) * 111.321
 
 	for i := range mrks {
 		mtime := mrks[i].GetGpst()
-		mrks[i].gpstDiff = mtime.Diff(&mrks[i].closestTime) /
-			mrks[i].sndClosestTime.Diff(&mrks[i].closestTime)
+		denom := mrks[i].sndClosestTime.Diff(&mrks[i].closestTime)
+		if denom == 0 {
+			mrks[i].gpstDiff = 0
+		} else {
+			mrks[i].gpstDiff = mtime.Diff(&mrks[i].closestTime) / denom
+		}
 
 		mrks[i].interpLatitude =
 			(mrks[i].closestLatitude * (1 - mrks[i].gpstDiff)) +
@@ -91,6 +94,7 @@ func ppkUpdatedMrks(mrks []MRK) {
 		mrks[i].interpAltitude = (mrks[i].closestAltitude * (1 - mrks[i].gpstDiff)) +
 			(mrks[i].sndClosestAltitude * mrks[i].gpstDiff)
 
+		degLon := math.Cos(DegreeToRadian(mrks[i].Latitude.v)) * 111.321
 		mrks[i].phaseCompNsDeg = mrks[i].PhaseCompNs.v / 1000000 / 111.111
 		mrks[i].phaseCompEwDeg = mrks[i].PhaseCompEw.v / 1000000 / degLon
 		mrks[i].phaseCompVM = mrks[i].PhaseCompV.v / 1000
@@ -109,7 +113,10 @@ func ppkUpdatedMrks(mrks []MRK) {
 
 func convertGPS(mrk *MRK, pose_datum Datum, pose_vertica_datum geoid.VerticalDatum,
 	srs string, vertica_datum geoid.VerticalDatum, ellipsoid_offset float64) [3]float64 {
-	srspj, _ := proj.NewProj(srs)
+	srspj, err := proj.NewProj(srs)
+	if err != nil {
+		return [3]float64{}
+	}
 	var val [3]float64
 	latitude := mrk.updatedLatitude
 	longitude := mrk.updatedLongitude
@@ -119,6 +126,7 @@ func convertGPS(mrk *MRK, pose_datum Datum, pose_vertica_datum geoid.VerticalDat
 		altitude = MSLToWGS84(altitude, longitude, latitude,
 			pose_vertica_datum)
 	}
+	altitude += ellipsoid_offset
 	if isDatums(srspj, pose_datum) {
 		val = transformFromLLA(
 			srspj, [3]float64{longitude, latitude, altitude}, pose_datum)

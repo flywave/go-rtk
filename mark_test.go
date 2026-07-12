@@ -187,10 +187,7 @@ func TestWeekMarshalRoundTrip(t *testing.T) {
 func TestWeekUnmarshalInvalid(t *testing.T) {
 	var w Week
 	err := w.UnmarshalCSV("2024")
-	if err != nil {
-		t.FailNow()
-	}
-	if w.w != 0 {
+	if err == nil {
 		t.FailNow()
 	}
 }

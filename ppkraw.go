@@ -18,12 +18,16 @@ void ppk_raw_to_rindex(gtime_t gpst, int format, const char *bin,
   char file[1024], *outfile[6], ofile_[6][1024] = {""};
   for (i = 0; i < 6; i++)
     outfile[i] = ofile_[i];
-  strcpy(file, bin);
+  strncpy(file, bin, sizeof(file) - 1);
+  file[sizeof(file) - 1] = '\0';
   rnxopt.rnxver = RNX3VER;
-  strcpy(outfile[0], ofile);
-  strcpy(outfile[1], nfile);
+  strncpy(outfile[0], ofile, 1023);
+  outfile[0][1023] = '\0';
+  strncpy(outfile[1], nfile, 1023);
+  outfile[1][1023] = '\0';
   if (gfile[0] != '\0') {
-    strcpy(outfile[2], gfile);
+    strncpy(outfile[2], gfile, 1023);
+    outfile[2][1023] = '\0';
   }
   rnxopt.trtcm = gpst;
   rnxopt.navsys = 0x3;

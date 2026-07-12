@@ -25,12 +25,15 @@ func (date *PhaseComp) String() string {
 
 func (date *PhaseComp) UnmarshalCSV(csv string) (err error) {
 	strs := strings.Split(csv, ",")
+	if len(strs) < 2 {
+		return fmt.Errorf("PhaseComp: expected 2 fields, got %d", len(strs))
+	}
 	strs[0] = strings.Trim(strs[0], " ")
 	date.v, err = strconv.ParseFloat(strs[0], 64)
-	date.d = strings.Trim(strs[1], " ")
 	if err != nil {
 		return
 	}
+	date.d = strings.Trim(strs[1], " ")
 	return
 }
 
@@ -48,10 +51,11 @@ func (w *Week) String() string {
 
 func (w *Week) UnmarshalCSV(csv string) (err error) {
 	csv = strings.Trim(csv, " ")
-	if strings.HasPrefix(csv, "[") && strings.HasSuffix(csv, "]") {
-		s := csv[1 : len(csv)-1]
-		w.w, err = strconv.ParseInt(s, 10, 32)
+	if !strings.HasPrefix(csv, "[") || !strings.HasSuffix(csv, "]") {
+		return fmt.Errorf("Week: expected [NNNN] format, got %q", csv)
 	}
+	s := csv[1 : len(csv)-1]
+	w.w, err = strconv.ParseInt(s, 10, 32)
 	return
 }
 
@@ -70,12 +74,15 @@ func (date *Angle) String() string {
 
 func (date *Angle) UnmarshalCSV(csv string) (err error) {
 	strs := strings.Split(csv, ",")
+	if len(strs) < 2 {
+		return fmt.Errorf("Angle: expected 2 fields, got %d", len(strs))
+	}
 	strs[0] = strings.Trim(strs[0], " ")
 	date.v, err = strconv.ParseFloat(strs[0], 64)
-	date.d = strings.Trim(strs[1], " ")
 	if err != nil {
 		return
 	}
+	date.d = strings.Trim(strs[1], " ")
 	return
 }
 
@@ -94,11 +101,14 @@ func (date *RtkState) String() string {
 
 func (date *RtkState) UnmarshalCSV(csv string) (err error) {
 	strs := strings.Split(csv, ",")
+	if len(strs) < 2 {
+		return fmt.Errorf("RtkState: expected 2 fields, got %d", len(strs))
+	}
 	date.e, err = strconv.ParseInt(strs[0], 10, 32)
-	date.f = strs[1]
 	if err != nil {
 		return
 	}
+	date.f = strings.Trim(strs[1], " ")
 	return
 }
 
@@ -118,6 +128,9 @@ func (date *Std) String() string {
 
 func (date *Std) UnmarshalCSV(csv string) (err error) {
 	strs := strings.Split(csv, ",")
+	if len(strs) < 3 {
+		return fmt.Errorf("Std: expected 3 fields, got %d", len(strs))
+	}
 
 	strs[0] = strings.Trim(strs[0], " ")
 	strs[1] = strings.Trim(strs[1], " ")

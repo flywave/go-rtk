@@ -45,9 +45,12 @@ void init_in_file(char *infile[], int *n, const char *rofile,
     infile[i] = (char *)malloc(sizeof(char) * BUFSIZE);
     *infile[i] = '\0';
   }
-  strcpy(infile[0], rofile);
-  strcpy(infile[1], bofile);
-  strcpy(infile[2], navfile);
+  strncpy(infile[0], rofile, BUFSIZE - 1);
+  infile[0][BUFSIZE - 1] = '\0';
+  strncpy(infile[1], bofile, BUFSIZE - 1);
+  infile[1][BUFSIZE - 1] = '\0';
+  strncpy(infile[2], navfile, BUFSIZE - 1);
+  infile[2][BUFSIZE - 1] = '\0';
 
   *n = 0;
   while (*n < INFILEMAX && strlen(infile[*n])) {
@@ -70,7 +73,8 @@ int ppk_solution(const char *rofile, const char *bofile,
   int n;
   char *infile[5];
   char outfile[1024] = "";
-  strcpy(outfile, posfile);
+  strncpy(outfile, posfile, sizeof(outfile) - 1);
+  outfile[sizeof(outfile) - 1] = '\0';
 
   resetsysopts();
   getsysopts(&prcopt, &solopt, &filopt);
@@ -84,6 +88,7 @@ int ppk_solution(const char *rofile, const char *bofile,
 
   if (postpos(ts, te, ti, tu, &prcopt, &solopt, &filopt, infile, n, outfile, "",
               "") != 0) {
+    free_in_file(infile);
     return -1;
   }
 

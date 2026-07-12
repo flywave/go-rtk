@@ -29,30 +29,37 @@ type Pos struct {
 }
 
 type unsafeSol struct {
-	time  C.gtime_t
-	rr_0  float64
-	rr_1  float64
-	rr_2  float64
-	rr_3  float64
-	rr_4  float64
-	rr_5  float64
-	qr_0  float32
-	qr_1  float32
-	qr_2  float32
-	qr_3  float32
-	qr_4  float32
-	qr_5  float32
-	dtr_0 float64
-	dtr_1 float64
-	dtr_2 float64
-	dtr_3 float64
-	dtr_4 float64
-	dtr_5 float64
-	_type uint8
-	stat  uint8
-	ns    uint8
-	age   float32
-	ratio float32
+	time   C.gtime_t
+	rr_0   float64
+	rr_1   float64
+	rr_2   float64
+	rr_3   float64
+	rr_4   float64
+	rr_5   float64
+	qr_0   float32
+	qr_1   float32
+	qr_2   float32
+	qr_3   float32
+	qr_4   float32
+	qr_5   float32
+	qv_0   float32
+	qv_1   float32
+	qv_2   float32
+	qv_3   float32
+	qv_4   float32
+	qv_5   float32
+	dtr_0  float64
+	dtr_1  float64
+	dtr_2  float64
+	dtr_3  float64
+	dtr_4  float64
+	dtr_5  float64
+	_type  uint8
+	stat   uint8
+	ns     uint8
+	age    float32
+	ratio  float32
+	thres  float32
 }
 
 type TimeRange [2]GTime

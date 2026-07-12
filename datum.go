@@ -15,7 +15,7 @@ func getCurrentDir() string {
 
 func init() {
 	dir := getCurrentDir()
-	proj.SetFinder([]string{filepath.Join(dir, "../proj_data")})
+	proj.SetFinder([]string{filepath.Join(dir, "proj_data")})
 }
 
 type Datum uint32
@@ -78,7 +78,7 @@ func isDatums(dst *proj.Proj, d Datum) bool {
 
 func init() {
 	dir := getCurrentDir()
-	geoid.SetGeoidPath(filepath.Join(dir, "../geoid_data"))
+	geoid.SetGeoidPath(filepath.Join(dir, "geoid_data"))
 }
 
 func geoid84_30() *geoid.Geoid {
