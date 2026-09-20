@@ -13,11 +13,11 @@ package rtk
 #define INFILEMAX 5
 #define BUFSIZE 1024
 
-int showmsg(const char *format, ...) { return 0; }
+__attribute__((weak)) int showmsg(const char *format, ...) { return 0; }
 
-void settspan(gtime_t ts, gtime_t te) {}
+__attribute__((weak)) void settspan(gtime_t ts, gtime_t te) {}
 
-void settime(gtime_t time) {}
+__attribute__((weak)) void settime(gtime_t time) {}
 
 void init_popt(prcopt_t *opt) {
   opt->mode = PMODE_PPP_STATIC;
